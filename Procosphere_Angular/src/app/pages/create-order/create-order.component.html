@@ -1,0 +1,360 @@
+<div class="create-order-page">
+  <div>
+    <h1 class="page-title">Create Procurement Order</h1>
+    <p class="page-subtitle">Complete the form to create a new order</p>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert-success">
+      <p>{{ successMessage }}</p>
+    </div>
+  }
+
+  <!-- Step Indicator -->
+  <div class="step-indicator-card">
+    <div class="step-indicator-row">
+      @for (step of steps; track step; let i = $index) {
+        <div class="step-item">
+          <div class="step-inner">
+            <div class="step-circle"
+              [class.step-completed]="i < currentStep"
+              [class.step-active]="i === currentStep"
+              [class.step-upcoming]="i > currentStep">
+              @if (i < currentStep) {
+                <svg xmlns="http://www.w3.org/2000/svg" class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+              } @else {
+                {{ i + 1 }}
+              }
+            </div>
+            <span class="step-label">{{ step }}</span>
+          </div>
+          @if (i < steps.length - 1) {
+            <div class="step-connector"
+              [class.connector-done]="i < currentStep"
+              [class.connector-pending]="i >= currentStep"></div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Form Content -->
+  <div class="form-card">
+
+    <!-- Step 1: Order Details -->
+    @if (currentStep === 0) {
+      <div class="step-content">
+        <h2 class="step-heading">Order Details</h2>
+
+        <div class="form-group">
+          <label class="form-label">Order Title *</label>
+          <input type="text" [(ngModel)]="formData.orderTitle" placeholder="e.g., Office Equipment Q1 2026"
+            class="form-input"
+            [class.is-invalid]="errors['orderTitle']" />
+          @if (errors['orderTitle']) { <p class="form-error">{{ errors['orderTitle'] }}</p> }
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Supplier *</label>
+            <select [(ngModel)]="formData.supplierId" class="form-input"
+              [class.is-invalid]="errors['supplierId']">
+              <option [ngValue]="0">Select supplier</option>
+              @for (s of suppliers; track s.id) { <option [ngValue]="s.id">{{ s.name }}</option> }
+            </select>
+            @if (errors['supplierId']) { <p class="form-error">{{ errors['supplierId'] }}</p> }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Department *</label>
+            <input type="text" [(ngModel)]="formData.department" placeholder="e.g., IT, Finance"
+              class="form-input"
+              [class.is-invalid]="errors['department']" />
+            @if (errors['department']) { <p class="form-error">{{ errors['department'] }}</p> }
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select [(ngModel)]="formData.priority" class="form-input">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Payment Method *</label>
+            <select [(ngModel)]="formData.paymentMethod" class="form-input"
+              [class.is-invalid]="errors['paymentMethod']">
+              <option value="">Select payment method</option>
+              @for (p of paymentMethods; track p) { <option [value]="p">{{ p }}</option> }
+            </select>
+            @if (errors['paymentMethod']) { <p class="form-error">{{ errors['paymentMethod'] }}</p> }
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Budget Code *</label>
+            <input type="text" [(ngModel)]="formData.budgetCode" placeholder="e.g., IT-2024"
+              class="form-input"
+              [class.is-invalid]="errors['budgetCode']" />
+            @if (errors['budgetCode']) { <p class="form-error">{{ errors['budgetCode'] }}</p> }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Expected Delivery Date *</label>
+            <input type="date" [(ngModel)]="formData.expectedDeliveryDate" [min]="todayIso"
+              class="form-input"
+              [class.is-invalid]="errors['expectedDeliveryDate']" />
+            @if (errors['expectedDeliveryDate']) { <p class="form-error">{{ errors['expectedDeliveryDate'] }}</p> }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea [(ngModel)]="formData.notes" rows="3" placeholder="Additional notes..."
+            class="form-input"></textarea>
+        </div>
+      </div>
+    }
+
+    <!-- Step 2: Select Products -->
+    @if (currentStep === 1) {
+      <div class="step-content">
+        <h2 class="step-heading">Select Products</h2>
+        @if (errors['selectedProducts']) {
+          <div class="alert-error">
+            <p>{{ errors['selectedProducts'] }}</p>
+          </div>
+        }
+        @if (isLoading) {
+          <p class="loading-text">Loading products...</p>
+        }
+        <div class="product-list">
+          @for (product of products; track product.productId) {
+            <div class="product-row"
+              [class.product-selected]="isSelected(product.productId)"
+              (click)="toggleProduct(product.productId)">
+              <div class="product-row-left">
+                <input type="checkbox" [checked]="isSelected(product.productId)" (click)="$event.stopPropagation()" (change)="toggleProduct(product.productId)"
+                  class="product-checkbox" />
+                <div>
+                  <p class="product-name">{{ product.productName }}</p>
+                  <p class="product-category">{{ product.categoryName }}</p>
+                </div>
+              </div>
+              <span class="product-price">${{ (product.price ?? 0).toFixed(2) }}</span>
+            </div>
+          }
+        </div>
+        <p class="product-count">{{ formData.selectedProducts.length }} product(s) selected</p>
+      </div>
+    }
+
+    <!-- Step 3: Enter Quantities -->
+    @if (currentStep === 2) {
+      <div class="step-content">
+        <h2 class="step-heading">Enter Quantities</h2>
+        @if (formData.selectedProducts.length === 0) {
+          <p class="empty-text">No products selected. Go back and select products.</p>
+        }
+        @for (id of formData.selectedProducts; track id) {
+          <div class="quantity-row">
+            <div class="quantity-row-left">
+              <p class="product-name">{{ getProduct(id)?.productName }}</p>
+              <p class="product-unit-price">${{ getProduct(id)?.price?.toFixed(2) }} each</p>
+            </div>
+            <div class="quantity-row-right">
+              <div>
+                <input type="number" [value]="formData.quantities[id] || ''" (input)="updateQuantity(id, $any($event.target).value)"
+                  min="1" max="100" placeholder="Qty"
+                  class="quantity-input"
+                  [class.is-invalid]="errors['qty_'+id]" />
+                @if (errors['qty_'+id]) { <p class="field-error-xs">{{ errors['qty_'+id] }}</p> }
+              </div>
+              <p class="line-total">
+                ${{ ((getProduct(id)?.price || 0) * (formData.quantities[id] || 0)).toFixed(2) }}
+              </p>
+            </div>
+          </div>
+        }
+        <div class="total-bar">
+          <div style="text-align: right;">
+            <p class="total-label">Total Amount</p>
+            <p class="total-amount">${{ calculateTotal().toFixed(2) }}</p>
+          </div>
+        </div>
+        @if (errors['total']) {
+          <div class="alert-error">
+            <p>{{ errors['total'] }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Step 4: Delivery Information -->
+    @if (currentStep === 3) {
+      <div class="step-content">
+        <h2 class="step-heading">Delivery Information</h2>
+
+        <div class="form-group">
+          <label class="form-label">Delivery Method *</label>
+          <select [(ngModel)]="formData.deliveryMethod" class="form-input"
+            [class.is-invalid]="errors['deliveryMethod']">
+            <option value="">Select delivery method</option>
+            @for (d of deliveryMethods; track d) { <option [value]="d">{{ d }}</option> }
+          </select>
+          @if (errors['deliveryMethod']) { <p class="form-error">{{ errors['deliveryMethod'] }}</p> }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Delivery Address *</label>
+          <input type="text" [(ngModel)]="formData.deliveryAddress" placeholder="Street address"
+            class="form-input"
+            [class.is-invalid]="errors['deliveryAddress']" />
+          @if (errors['deliveryAddress']) { <p class="form-error">{{ errors['deliveryAddress'] }}</p> }
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">City *</label>
+            <input type="text" [(ngModel)]="formData.deliveryCity"
+              class="form-input"
+              [class.is-invalid]="errors['deliveryCity']" />
+            @if (errors['deliveryCity']) { <p class="form-error">{{ errors['deliveryCity'] }}</p> }
+          </div>
+          <div class="form-group">
+            <label class="form-label">State *</label>
+            <input type="text" [(ngModel)]="formData.deliveryState"
+              class="form-input"
+              [class.is-invalid]="errors['deliveryState']" />
+            @if (errors['deliveryState']) { <p class="form-error">{{ errors['deliveryState'] }}</p> }
+          </div>
+          <div class="form-group">
+            <label class="form-label">PIN Code *</label>
+            <input type="text" [(ngModel)]="formData.deliveryZip" placeholder="e.g. 560001"
+              maxlength="6" inputmode="numeric"
+              class="form-input"
+              [class.is-invalid]="errors['deliveryZip']" />
+            @if (errors['deliveryZip']) { <p class="form-error">{{ errors['deliveryZip'] }}</p> }
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">Contact Person *</label>
+            <input type="text" [(ngModel)]="formData.contactPerson"
+              class="form-input"
+              [class.is-invalid]="errors['contactPerson']" />
+            @if (errors['contactPerson']) { <p class="form-error">{{ errors['contactPerson'] }}</p> }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Phone *</label>
+            <input type="tel" [(ngModel)]="formData.contactPhone" placeholder="+91 98765 43210"
+              inputmode="tel"
+              class="form-input"
+              [class.is-invalid]="errors['contactPhone']" />
+            @if (errors['contactPhone']) { <p class="form-error">{{ errors['contactPhone'] }}</p> }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Email *</label>
+            <input type="email" [(ngModel)]="formData.contactEmail"
+              class="form-input"
+              [class.is-invalid]="errors['contactEmail']" />
+            @if (errors['contactEmail']) { <p class="form-error">{{ errors['contactEmail'] }}</p> }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Special Instructions</label>
+          <textarea [(ngModel)]="formData.specialInstructions" rows="3"
+            class="form-input"
+            placeholder="Any special delivery instructions..."></textarea>
+        </div>
+      </div>
+    }
+
+    <!-- Step 5: Review & Submit -->
+    @if (currentStep === 4) {
+      <div class="step-content-lg">
+        <h2 class="step-heading">Review &amp; Submit</h2>
+
+        <div class="review-block">
+          <h3 class="review-block-title">Order Details</h3>
+          <div class="review-grid">
+            <p class="review-label">Order Title:</p><p class="review-value">{{ formData.orderTitle }}</p>
+            <p class="review-label">Supplier:</p><p class="review-value">{{ supplierNameFor(formData.supplierId) }}</p>
+            <p class="review-label">Department:</p><p class="review-value">{{ formData.department }}</p>
+            <p class="review-label">Payment Method:</p><p class="review-value">{{ formData.paymentMethod }}</p>
+            <p class="review-label">Budget Code:</p><p class="review-value">{{ formData.budgetCode }}</p>
+            <p class="review-label">Expected Delivery:</p><p class="review-value">{{ formData.expectedDeliveryDate }}</p>
+          </div>
+        </div>
+
+        <div class="review-block">
+          <h3 class="review-block-title">Selected Products</h3>
+          @for (id of formData.selectedProducts; track id) {
+            <div class="review-product-row">
+              <span>{{ getProduct(id)?.productName }} &times; {{ formData.quantities[id] || 0 }}</span>
+              <span class="review-product-total">${{ ((getProduct(id)?.price || 0) * (formData.quantities[id] || 0)).toFixed(2) }}</span>
+            </div>
+          }
+          <div class="review-total-row">
+            <span>Total</span>
+            <span class="review-total-amount">${{ calculateTotal().toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <div class="review-block">
+          <h3 class="review-block-title">Delivery Information</h3>
+          <div class="review-grid">
+            <p class="review-label">Method:</p><p class="review-value">{{ formData.deliveryMethod }}</p>
+            <p class="review-label">Address:</p><p class="review-value">{{ formData.deliveryAddress }}, {{ formData.deliveryCity }}, {{ formData.deliveryState }} {{ formData.deliveryZip }}</p>
+            <p class="review-label">Contact:</p><p class="review-value">{{ formData.contactPerson }}</p>
+          </div>
+        </div>
+
+        @if (errors['total'] || errors['budgetCode'] || errors['general']) {
+          <div class="alert-error">
+            @if (errors['total']) { <p>{{ errors['total'] }}</p> }
+            @if (errors['budgetCode']) { <p>{{ errors['budgetCode'] }}</p> }
+            @if (errors['general']) { <p>{{ errors['general'] }}</p> }
+          </div>
+        }
+
+        @if (serverValidating) {
+          <div class="banner-info">
+            <p>Validating order with server...</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-bar">
+    <div class="nav-left">
+      <button (click)="handleCancel()" class="btn-outline-nav">Cancel</button>
+      <button (click)="handleReset()" class="btn-outline-nav">Reset Form</button>
+    </div>
+    <div class="nav-right">
+      @if (currentStep > 0) {
+        <button (click)="handleBack()" class="btn-outline-nav">
+          <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          Back
+        </button>
+      }
+      @if (currentStep < steps.length - 1) {
+        <button (click)="handleNext()" class="btn-next">
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      } @else {
+        <button (click)="handleSubmit()" [disabled]="serverValidating" class="btn-submit">
+          {{ serverValidating ? 'Submitting...' : 'Submit Order' }}
+        </button>
+      }
+    </div>
+  </div>
+</div>

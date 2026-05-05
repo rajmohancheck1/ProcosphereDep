@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\(\\\\.java$|\\\\.ts$|\\\\.properties$|\\\\.yml$|\\\\.json$\\)\")",
+      "Bash(npx ng *)",
+      "Bash(npm install *)",
+      "Bash(ls mvnw*)",
+      "Bash(ls pom.xml)",
+      "Bash(./mvnw.cmd compile *)",
+      "Bash(./mvnw.cmd clean *)",
+      "Bash(npx tailwindcss *)",
+      "Bash(rm tailwind.config.js postcss.config.js)",
+      "Bash(npm uninstall *)",
+      "Bash(cd /tmp)",
+      "Bash(pandoc --track-changes=all \"C:\\\\Users\\\\2479761\\\\Downloads\\\\FRD_CarWashingServices-Revised 7.docx\" -o frd.md)",
+      "Read(//tmp/**)",
+      "Bash(node -e ' *)",
+      "Read(//c/tmp/**)",
+      "Bash(node generate-frd.js \"C:\\\\Users\\\\2479761\\\\Downloads\\\\FRD_ProcureSphere.docx\")",
+      "Bash(npm init *)"
+    ]
+  }
+}

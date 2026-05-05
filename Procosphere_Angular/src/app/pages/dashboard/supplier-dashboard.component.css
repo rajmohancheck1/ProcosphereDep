@@ -1,0 +1,268 @@
+/* ============================================================
+   Supplier Dashboard — component styles
+   ============================================================ */
+
+/* Page layout */
+.supplier-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Pending orders info banner */
+.pending-banner {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pending-banner-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.pending-banner-text {
+  font-size: 0.875rem;
+  color: #1e3a8a;
+}
+
+/* Page header row */
+.supplier-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.supplier-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.supplier-subtitle {
+  color: #4b5563;
+}
+
+.supplier-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.export-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.btn-new-order {
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.15s;
+}
+
+.btn-new-order:hover {
+  background: #1d4ed8;
+}
+
+/* Metric cards grid */
+.supplier-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .supplier-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .supplier-metrics-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Metric card */
+.supplier-metric-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.25rem;
+}
+
+.metric-card-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.metric-card-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.metric-card-sub-blue {
+  font-size: 0.75rem;
+  color: #2563eb;
+}
+
+.metric-card-sub-yellow {
+  font-size: 0.75rem;
+  color: #ca8a04;
+}
+
+.metric-card-sub-green {
+  font-size: 0.75rem;
+  color: #16a34a;
+}
+
+.metric-card-sub-gray {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Orders table container */
+.orders-table-container {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.orders-table-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.orders-table-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.btn-view-all {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2563eb;
+}
+
+.btn-view-all:hover {
+  color: #1e40af;
+}
+
+.orders-table-scroll {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orders-table th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.orders-table th.th-right {
+  text-align: right;
+}
+
+.orders-table tbody {
+  background: #ffffff;
+}
+
+.orders-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orders-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.orders-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.orders-table td {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.td-order-id {
+  font-weight: 500;
+  color: #111827;
+}
+
+.td-products {
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-amount {
+  font-weight: 500;
+  color: #111827;
+}
+
+.td-right {
+  text-align: right;
+}
+
+/* Progress bar inside table */
+.progress-track-w {
+  width: 7rem;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Progress bar color classes (mapped from progressColor in TS) */
+.prog-draft     { background: #9ca3af; }
+.prog-pending   { background: #eab308; }
+.prog-approved  { background: #22c55e; }
+.prog-ordered   { background: #3b82f6; }
+.prog-received  { background: #059669; }
+.prog-rejected  { background: #ef4444; }
+.prog-cancelled { background: #6b7280; }
+
+/* View order link */
+.link-view-order {
+  color: #2563eb;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.link-view-order:hover {
+  color: #1e40af;
+}

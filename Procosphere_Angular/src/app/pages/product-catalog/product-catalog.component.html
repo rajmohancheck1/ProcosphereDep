@@ -1,0 +1,92 @@
+<div class="catalog-page">
+  <div>
+    <h1 class="catalog-title">Product Catalog</h1>
+    <p class="catalog-subtitle">Browse and search available products</p>
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="filter-panel">
+    <div class="filter-grid">
+      <!-- Product Search -->
+      <div class="filter-search-col">
+        <label class="filter-label">Product Search</label>
+        <div class="filter-search-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" class="filter-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" [(ngModel)]="searchQuery" class="filter-search-input" placeholder="Search products..." />
+        </div>
+      </div>
+      <!-- Category -->
+      <div>
+        <label class="filter-label">Category</label>
+        <select [(ngModel)]="selectedCategory" class="filter-select">
+          @for (cat of categories; track cat) { <option [value]="cat">{{ cat }}</option> }
+        </select>
+      </div>
+      <!-- Sort -->
+      <div>
+        <label class="filter-label">Sort By</label>
+        <select [(ngModel)]="sortBy" class="filter-select">
+          @for (opt of sortOptions; track opt) { <option [value]="opt">{{ opt }}</option> }
+        </select>
+      </div>
+    </div>
+    <!-- In Stock Checkbox -->
+    <div class="filter-checkbox-row">
+      <input type="checkbox" id="inStockOnly" [(ngModel)]="inStockOnly" class="filter-checkbox" />
+      <label for="inStockOnly" class="filter-checkbox-label">In Stock Only</label>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="results-bar">
+    <p class="results-count">Showing {{ filteredProducts.length }} of {{ allProducts.length }} products</p>
+    <button class="more-filters-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      More Filters
+    </button>
+  </div>
+
+  @if (errorMsg) {
+    <div class="alert-error">
+      <strong>Error:</strong> {{ errorMsg }}
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="catalog-loading">Loading products...</div>
+  }
+
+  <!-- Product Grid -->
+  @if (!isLoading) {
+    <div class="product-grid">
+      @for (product of filteredProducts; track product.productId) {
+        <a [routerLink]="['/app/products', product.productId]" class="product-card">
+          <div class="product-image-wrapper">
+            <img [src]="imageUrl(product)" [alt]="product.productName" class="product-image" (error)="$any($event.target).style.display='none'" />
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-header">
+              <div>
+                <h3 class="product-name">{{ product.productName }}</h3>
+                <p class="product-id">PROD-{{ product.productId }}</p>
+              </div>
+              <span class="product-stock-badge" [ngClass]="stockBadgeClass(product)">
+                {{ stockLabel(product) }}
+              </span>
+            </div>
+            <p class="product-category">{{ product.categoryName }}</p>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="product-card-footer">
+              <span class="product-price">${{ (product.price ?? 0).toFixed(2) }}</span>
+              <span class="product-view-link">View details →</span>
+            </div>
+          </div>
+        </a>
+      }
+      @if (filteredProducts.length === 0) {
+        <div class="product-grid-empty">No products found.</div>
+      }
+    </div>
+  }
+</div>

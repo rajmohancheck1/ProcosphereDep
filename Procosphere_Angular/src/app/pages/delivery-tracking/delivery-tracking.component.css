@@ -1,0 +1,335 @@
+/* Delivery Tracking Component */
+
+.delivery-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: #4b5563;
+}
+
+.delivery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.delivery-loading,
+.delivery-empty {
+  text-align: center;
+  padding: 3rem 0;
+  color: #6b7280;
+}
+
+/* Individual delivery card */
+.delivery-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.delivery-card-header {
+  background: #f9fafb;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.delivery-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delivery-tracking-id {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.delivery-order-id {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.delivery-header-right {
+  text-align: right;
+}
+
+.delivery-status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 9999px;
+}
+
+.delivery-eta {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+/* Progress bar section */
+.delivery-progress-section {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.delivery-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.delivery-progress-track {
+  flex: 1;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.75rem;
+}
+
+.delivery-progress-fill {
+  background: #2563eb;
+  height: 0.75rem;
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+.delivery-progress-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Timeline section */
+.delivery-timeline-section {
+  padding: 1.5rem;
+}
+
+.delivery-timeline-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.timeline-wrapper {
+  position: relative;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 15px;
+  top: 1rem;
+  bottom: 1rem;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.timeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.timeline-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.timeline-step-dot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.timeline-step-dot.completed {
+  background-color: #22c55e;
+}
+
+.timeline-step-dot.current {
+  background-color: #2563eb;
+}
+
+.timeline-step-dot.pending {
+  background-color: #d1d5db;
+}
+
+.timeline-dot-inner {
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #ffffff;
+  border-radius: 9999px;
+}
+
+.timeline-step-dot svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #ffffff;
+}
+
+.timeline-step-dot.current svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.timeline-step-content {
+  flex: 1;
+  padding-top: 0.25rem;
+}
+
+.timeline-step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.timeline-step-label {
+  font-weight: 500;
+}
+
+.timeline-step-label.is-current {
+  color: #2563eb;
+}
+
+.timeline-step-label.is-completed {
+  color: #111827;
+}
+
+.timeline-step-label.is-pending {
+  color: #6b7280;
+}
+
+.timeline-step-date {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.timeline-step-sub {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+/* Card footer */
+.delivery-card-footer {
+  background: #f9fafb;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delivery-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.delivery-location svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.delivery-details-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.delivery-details-btn:hover {
+  background: #ffffff;
+}
+
+/* Summary cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.summary-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.summary-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-icon-wrap {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.summary-icon-wrap.blue {
+  background-color: #dbeafe;
+}
+
+.summary-icon-wrap.purple {
+  background-color: #f3e8ff;
+}
+
+.summary-icon-wrap.green {
+  background-color: #dcfce7;
+}
+
+.summary-icon-wrap svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.summary-icon-wrap.blue svg {
+  color: #2563eb;
+}
+
+.summary-icon-wrap.purple svg {
+  color: #9333ea;
+}
+
+.summary-icon-wrap.green svg {
+  color: #16a34a;
+}
+
+.summary-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.summary-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+}

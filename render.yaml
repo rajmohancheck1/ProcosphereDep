@@ -1,0 +1,51 @@
+databases:
+  - name: procuresphere-db
+    databaseName: procuresphere
+    user: procure
+    plan: free
+
+services:
+  # ── Spring Boot API ────────────────────────────────────────────────────────
+  - type: web
+    name: procuresphere-backend
+    runtime: docker
+    dockerfilePath: ./Backend/Dockerfile
+    dockerContext: ./Backend
+    plan: free
+    envVars:
+      # Construct the JDBC URL from the Render PostgreSQL Internal Connection String:
+      # Replace "postgres://" with "jdbc:postgresql://" and append "?sslmode=require"
+      - key: SPRING_DATASOURCE_URL
+        sync: false           # set manually in the dashboard (see README steps)
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: procuresphere-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: procuresphere-db
+          property: password
+      - key: DB_DRIVER
+        value: org.postgresql.Driver
+      - key: DB_DIALECT
+        value: org.hibernate.dialect.PostgreSQLDialect
+      - key: JWT_SECRET
+        generateValue: true
+      # Update after frontend is deployed:
+      - key: CORS_ORIGINS
+        sync: false           # e.g. https://procuresphere-frontend.onrender.com
+
+  # ── Angular SPA ───────────────────────────────────────────────────────────
+  - type: web
+    name: procuresphere-frontend
+    runtime: static
+    buildCommand: cd Procosphere_Angular && npm ci && npm run build:render
+    staticPublishPath: Procosphere_Angular/dist/procuresphere-angular/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Set to the backend service's public URL, e.g. https://procuresphere-backend.onrender.com
+      - key: BACKEND_URL
+        sync: false

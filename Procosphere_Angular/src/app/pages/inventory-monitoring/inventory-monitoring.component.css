@@ -1,0 +1,408 @@
+/* Inventory Monitoring Component */
+
+.inventory-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: #4b5563;
+}
+
+/* Alert summary cards */
+.alert-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .alert-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.alert-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.alert-card.border-red {
+  border-left: 4px solid #ef4444;
+}
+
+.alert-card.border-yellow {
+  border-left: 4px solid #eab308;
+}
+
+.alert-card.border-blue {
+  border-left: 4px solid #3b82f6;
+}
+
+.alert-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.alert-card-icon {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.alert-card-icon.red {
+  background-color: #fee2e2;
+}
+
+.alert-card-icon.yellow {
+  background-color: #fef9c3;
+}
+
+.alert-card-icon.blue {
+  background-color: #dbeafe;
+}
+
+.alert-card-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.alert-card-icon.red svg   { color: #dc2626; }
+.alert-card-icon.yellow svg { color: #ca8a04; }
+.alert-card-icon.blue svg  { color: #2563eb; }
+
+.alert-card-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.alert-card-count.red    { color: #dc2626; }
+.alert-card-count.yellow { color: #ca8a04; }
+.alert-card-count.blue   { color: #2563eb; }
+
+.alert-card-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.alert-card-note {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* Stock levels table panel */
+.table-panel {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.table-panel-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-panel-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.refresh-btn:hover {
+  background: #f9fafb;
+}
+
+.refresh-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inv-thead {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.inv-th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inv-tbody {
+  background: #ffffff;
+}
+
+.inv-tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.inv-tr:hover {
+  background: #f9fafb;
+}
+
+.inv-td {
+  padding: 1rem 1.5rem;
+  white-space: nowrap;
+}
+
+.inv-td-name {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.inv-td-id {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.stock-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stock-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.stock-bar-track {
+  flex: 1;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+  width: 5rem;
+}
+
+.stock-bar-fill {
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.inv-td-min {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.reorder-qty {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.reorder-qty.has-reorder {
+  color: #2563eb;
+}
+
+.reorder-qty.no-reorder {
+  color: #9ca3af;
+}
+
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.status-icon.critical svg { color: #dc2626; }
+.status-icon.low-stock svg { color: #ca8a04; }
+.status-icon.in-stock svg  { color: #16a34a; }
+
+.reorder-btn {
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0;
+}
+
+.reorder-btn:hover {
+  color: #1e40af;
+}
+
+/* Overview panel */
+.overview-panel {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.overview-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.overview-empty {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.distribution-section {
+  margin-bottom: 1.5rem;
+}
+
+.distribution-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.distribution-bar {
+  width: 100%;
+  height: 2rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: #f3f4f6;
+  display: flex;
+}
+
+.dist-segment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: width 0.3s;
+}
+
+.distribution-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.legend-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+.legend-name {
+  color: #374151;
+}
+
+/* Top low-stock section */
+.top-low-stock-section {
+  margin-top: 0;
+}
+
+.top-low-stock-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+}
+
+.low-stock-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.low-stock-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.low-stock-name {
+  font-weight: 500;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.75rem;
+}
+
+.low-stock-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.low-stock-units {
+  color: #4b5563;
+}
+
+.low-stock-bar-track {
+  width: 100%;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  height: 0.625rem;
+  overflow: hidden;
+}
+
+.low-stock-bar-fill {
+  height: 0.625rem;
+  border-radius: 9999px;
+  transition: width 0.3s;
+}

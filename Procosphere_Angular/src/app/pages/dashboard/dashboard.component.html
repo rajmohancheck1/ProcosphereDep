@@ -1,0 +1,131 @@
+<div class="dashboard-page">
+  @if (errorMsg) {
+    <div class="alert-error alert">
+      <strong>Error:</strong> {{ errorMsg }}
+    </div>
+  }
+
+  <!-- Page Header -->
+  <div>
+    <h1 class="dashboard-heading">Dashboard</h1>
+    <p class="dashboard-subtitle">Welcome back! Here's your procurement overview.</p>
+  </div>
+
+  <!-- System Summary Cards -->
+  <div class="metrics-grid">
+    @for (metric of metrics; track metric.label) {
+      <div class="metric-card">
+        <div class="metric-card-header">
+          <div class="metric-icon-wrap" [ngClass]="metric.color">
+            <!-- Package / Users / ShoppingCart / AlertTriangle icons -->
+            @if (metric.label === 'Total Products') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+            }
+            @if (metric.label === 'Total Users') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            }
+            @if (metric.label === 'Pending Orders') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            }
+            @if (metric.label === 'Out of Stock') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            }
+          </div>
+          <span class="metric-trend">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            {{ metric.trend }}
+          </span>
+        </div>
+        <h3 class="metric-value">{{ metric.value }}</h3>
+        <p class="metric-label">{{ metric.label }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <div class="section-header-row">
+      <h2>Quick Actions</h2>
+    </div>
+    <div class="quick-actions-grid">
+      @for (action of quickActions; track action.label) {
+        <button (click)="navigate(action.path)" class="action-card">
+          <div class="action-icon-wrap" [ngClass]="action.color">
+            @if (action.label === 'Create New Order') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            }
+            @if (action.label === 'Browse Product Catalog') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+            }
+            @if (action.label === 'Track Deliveries') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            }
+            @if (action.label === 'View Reports') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            }
+          </div>
+          <h3 class="action-label">{{ action.label }}</h3>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Recent Orders Table -->
+  <div class="recent-orders-section">
+    <h2>Recent Orders</h2>
+    <div class="orders-table-container">
+      <div class="orders-table-scroll">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Supplier</th>
+              <th>Products</th>
+              <th>Total Amount</th>
+              <th>Order Date</th>
+              <th>Status</th>
+              <th>Progress</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading) {
+              <tr><td colspan="8" class="table-empty">Loading orders...</td></tr>
+            } @else if (recentOrders.length === 0) {
+              <tr><td colspan="8" class="table-empty">No orders found.</td></tr>
+            } @else {
+              @for (order of recentOrders; track order.orderId) {
+                <tr>
+                  <td class="td-order-id">ORD-{{ order.orderId }}</td>
+                  <td class="td-supplier">{{ order.supplierName || ('Supplier #' + order.supplierId) }}</td>
+                  <td class="td-products">{{ getOrderProducts(order) }}</td>
+                  <td class="td-amount">{{ getOrderAmount(order) }}</td>
+                  <td class="td-date">{{ getOrderDate(order) }}</td>
+                  <td class="td-status">
+                    <span class="badge" [ngClass]="statusColors[order.status] || 'status-draft'">{{ order.status }}</span>
+                  </td>
+                  <td class="td-progress">
+                    <div class="progress-row-inline">
+                      <div class="progress-track-inline">
+                        <div class="progress-fill-blue" [style.width.%]="statusProgress[order.status] || 0"></div>
+                      </div>
+                      <span class="progress-pct-label">{{ statusProgress[order.status] || 0 }}%</span>
+                    </div>
+                  </td>
+                  <td class="td-actions">
+                    <div class="btn-actions-group">
+                      <button class="btn-view-order" (click)="navigate('/app/orders')">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        View
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

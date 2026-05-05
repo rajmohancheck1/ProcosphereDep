@@ -1,0 +1,82 @@
+<div class="user-page">
+  @if (errorMsg) {
+    <div class="alert-error alert"><strong>Error:</strong> {{ errorMsg }}</div>
+  }
+
+  <!-- Page header -->
+  <div>
+    <h1 class="user-heading">Welcome back, {{ firstName }}</h1>
+    <p class="user-subtitle">{{ today }}</p>
+  </div>
+
+  <!-- Metric Cards -->
+  <div class="user-metrics-grid">
+    <div class="user-metric-card">
+      <p class="metric-card-label">Available Products</p>
+      <p class="metric-card-value">{{ productCount }}</p>
+    </div>
+    <div class="user-metric-card">
+      <p class="metric-card-label">My Orders</p>
+      <p class="metric-card-value">{{ myOrderCount }}</p>
+    </div>
+    <div class="user-metric-card">
+      <p class="metric-card-label">Unread Notifications</p>
+      <p class="metric-card-value">{{ unreadCount }}</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div>
+    <h2 class="quick-actions-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+      <button (click)="navigateTo('/app/products')" class="action-card">
+        <div class="action-icon-wrap icon-bg-blue">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </div>
+        <h3 class="action-label">Browse Catalog</h3>
+        <p class="action-sub">Search and discover products</p>
+      </button>
+      <button (click)="navigateTo('/app/create-order')" class="action-card">
+        <div class="action-icon-wrap icon-bg-green">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        </div>
+        <h3 class="action-label">Create Order</h3>
+        <p class="action-sub">Start a new procurement request</p>
+      </button>
+      <button (click)="navigateTo('/app/orders')" class="action-card">
+        <div class="action-icon-wrap icon-bg-purple">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+        </div>
+        <h3 class="action-label">My Orders</h3>
+        <p class="action-sub">Review order history &amp; status</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recently Added Products -->
+  <div>
+    <h2 class="recent-products-title">Recently Added Products</h2>
+    <div class="products-grid">
+      @if (isLoading) {
+        <p class="products-empty">Loading products...</p>
+      } @else if (recentProducts.length === 0) {
+        <p class="products-empty">No products yet.</p>
+      } @else {
+        @for (p of recentProducts; track p.productId) {
+          <button (click)="navigateTo('/app/products')" class="product-card">
+            <div class="product-image-wrap">
+              <img [src]="p.imageUrl || ''" [alt]="p.productName" (error)="$any($event.target).style.display='none'" />
+            </div>
+            <p class="product-name">{{ p.productName }}</p>
+            <p class="product-price">₹{{ (p.price ?? 0).toFixed(0) }}</p>
+            <p class="product-stock"
+               [class.product-in-stock]="isInStock(p)"
+               [class.product-out-of-stock]="!isInStock(p)">
+              {{ isInStock(p) ? 'In stock' : 'Out of stock' }}
+            </p>
+          </button>
+        }
+      }
+    </div>
+  </div>
+</div>

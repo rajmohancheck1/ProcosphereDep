@@ -1,0 +1,244 @@
+/* Notifications Component */
+
+.notif-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: #4b5563;
+}
+
+.controls-bar {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1rem;
+}
+
+.controls-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.filter-btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-btn.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.filter-btn.inactive {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.unread-badge {
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.mark-all-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.mark-all-btn:hover {
+  color: #1e40af;
+}
+
+/* Notifications list */
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.notif-loading,
+.notif-empty {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 3rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.notif-empty-icon {
+  width: 3rem;
+  height: 3rem;
+  color: #d1d5db;
+  margin: 0 auto 0.75rem;
+  display: block;
+}
+
+.notif-empty-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.notif-empty-sub {
+  color: #6b7280;
+}
+
+/* Individual notification card */
+.notif-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: all 0.15s;
+}
+
+.notif-card.unread {
+  border-left: 4px solid;
+}
+
+.notif-card-body {
+  padding: 1rem;
+}
+
+.notif-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.notif-icon-wrap {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.notif-icon-svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.notif-title {
+  font-weight: 600;
+}
+
+.notif-title.is-read {
+  color: #4b5563;
+}
+
+.notif-title.is-unread {
+  color: #111827;
+}
+
+.notif-delete-btn {
+  color: #9ca3af;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.notif-delete-btn:hover {
+  color: #4b5563;
+}
+
+.notif-delete-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.notif-message {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+.notif-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.notif-time {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.notif-mark-read-btn {
+  font-size: 0.75rem;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+}
+
+.notif-mark-read-btn:hover {
+  color: #1e40af;
+}
+
+.notif-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #2563eb;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+/* Border colors for unread cards by type */
+.notif-card.unread.notif-border-alert   { border-left-color: #fecaca; }
+.notif-card.unread.notif-border-success { border-left-color: #bbf7d0; }
+.notif-card.unread.notif-border-warning { border-left-color: #fde68a; }
+.notif-card.unread.notif-border-info    { border-left-color: #bfdbfe; }

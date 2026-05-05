@@ -1,0 +1,280 @@
+<div class="manager-page">
+  @if (errorMsg) {
+    <div class="alert-error alert"><strong>Error:</strong> {{ errorMsg }}</div>
+  }
+  @if (successMsg) {
+    <div class="alert-success alert">{{ successMsg }}</div>
+  }
+
+  @if (stockAlertCount > 0) {
+    <div class="stock-alert-banner">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stock-alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      <p class="stock-alert-text"><strong>{{ stockAlertCount }} stock alert(s):</strong> {{ criticalStockCount }} critical, {{ lowStockCount }} low-stock items need attention.</p>
+    </div>
+  }
+
+  <!-- Page header -->
+  <div class="manager-header">
+    <div>
+      <h1 class="manager-heading">Manager Dashboard</h1>
+      <p class="manager-subtitle">{{ pendingCount }} approval(s) · {{ cancelRequestCount }} cancellation request(s) · {{ today }}</p>
+    </div>
+    <div class="manager-header-actions">
+      <span class="export-label">Export</span>
+      <button (click)="bulkApprove()" [disabled]="selectedIds.size === 0 || bulkBusy"
+        class="btn-bulk"
+        [class.btn-bulk-active]="selectedIds.size > 0"
+        [class.btn-bulk-disabled]="selectedIds.size === 0">
+        Bulk Approve
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Cards -->
+  <div class="manager-metrics-grid">
+    <div class="manager-metric-card">
+      <p class="metric-card-label">Pending Approvals</p>
+      <p class="metric-card-value">{{ pendingCount }}</p>
+      <p class="metric-card-sub-red">Awaiting decision</p>
+    </div>
+    <div class="manager-metric-card">
+      <p class="metric-card-label">Cancel Requests</p>
+      <p class="metric-card-value" [style.color]="cancelRequestCount > 0 ? '#dc2626' : 'inherit'">
+        {{ cancelRequestCount }}
+      </p>
+      <p class="metric-card-sub-red">Awaiting approval</p>
+    </div>
+    <div class="manager-metric-card">
+      <p class="metric-card-label">Approved This Week</p>
+      <p class="metric-card-value">{{ approvedThisWeek }}</p>
+      <p class="metric-card-sub-green">Last 7 days</p>
+    </div>
+    <div class="manager-metric-card">
+      <p class="metric-card-label">Stock Alerts</p>
+      <p class="metric-card-value">{{ stockAlertCount }}</p>
+      <p class="metric-card-sub-red">{{ criticalStockCount }} critical</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-nav">
+    <nav class="tabs-nav-inner">
+      <button (click)="activeTab='approvals'" class="tab-btn" [class.tab-active]="activeTab==='approvals'">
+        Pending Approvals
+      </button>
+      <button (click)="activeTab='cancellations'" class="tab-btn" [class.tab-active]="activeTab==='cancellations'">
+        Cancellation Requests
+        @if (cancelRequestCount > 0) {
+          <span style="margin-left:6px;background:#dc2626;color:#fff;border-radius:9999px;padding:1px 7px;font-size:0.75rem;">
+            {{ cancelRequestCount }}
+          </span>
+        }
+      </button>
+      <button (click)="activeTab='stock'" class="tab-btn" [class.tab-active]="activeTab==='stock'">
+        Stock Alerts
+      </button>
+      <button (click)="activeTab='suppliers'" class="tab-btn" [class.tab-active]="activeTab==='suppliers'">
+        Supplier Performance
+      </button>
+    </nav>
+  </div>
+
+  <!-- Pending Approvals Tab -->
+  @if (activeTab === 'approvals') {
+    <div class="table-card">
+      <div class="table-card-header">
+        <h2 class="table-card-title">Pending Orders</h2>
+        <div class="table-card-actions">
+          <button (click)="bulkApprove()" [disabled]="selectedIds.size === 0 || bulkBusy"
+            class="btn-bulk-sm"
+            [class.btn-bulk-sm-approve-active]="selectedIds.size > 0"
+            [class.btn-bulk-sm-inactive]="selectedIds.size === 0">
+            ✓ Approve selected
+          </button>
+          <button (click)="bulkReject()" [disabled]="selectedIds.size === 0 || bulkBusy"
+            class="btn-bulk-sm"
+            [class.btn-bulk-sm-reject-active]="selectedIds.size > 0"
+            [class.btn-bulk-sm-inactive]="selectedIds.size === 0">
+            ✕ Reject selected
+          </button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="mgr-table">
+          <thead>
+            <tr>
+              <th class="th-checkbox"><input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll()" class="row-checkbox" /></th>
+              <th>Order ID</th>
+              <th>Supplier</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Submitted</th>
+              <th>Risk</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading) {
+              <tr><td colspan="8" class="table-empty">Loading...</td></tr>
+            } @else if (pendingOrders.length === 0) {
+              <tr><td colspan="8" class="table-empty">No pending approvals — you're all caught up!</td></tr>
+            } @else {
+              @for (o of pendingOrders; track o.orderId) {
+                <tr>
+                  <td class="td-checkbox"><input type="checkbox" [checked]="isSelected(o.orderId)" (change)="toggleSelect(o.orderId)" class="row-checkbox" /></td>
+                  <td class="td-primary">#ORD-{{ o.orderId }}</td>
+                  <td>{{ getSupplierName(o) }}</td>
+                  <td class="td-truncate">{{ getItems(o) }}</td>
+                  <td class="td-primary">{{ getAmount(o.totalAmount) }}</td>
+                  <td>{{ getDate(o) }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="riskLabel(o).cls">{{ riskLabel(o).label }}</span>
+                  </td>
+                  <td>
+                    <div class="approval-actions">
+                      <button (click)="approve(o.orderId)" [disabled]="busyId === o.orderId" class="btn-sm-approve" title="Approve">✓</button>
+                      <button (click)="reject(o.orderId)" [disabled]="busyId === o.orderId" class="btn-sm-reject" title="Reject">✕</button>
+                      <a [routerLink]="['/app/orders', o.orderId]" class="btn-sm-view" title="View">⋯</a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- Cancellation Requests Tab -->
+  @if (activeTab === 'cancellations') {
+    <div class="table-card">
+      <div class="table-card-header">
+        <h2 class="table-card-title">Cancellation Requests</h2>
+      </div>
+      <div class="table-scroll">
+        <table class="mgr-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Title</th>
+              <th>Requested By</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading) {
+              <tr><td colspan="6" class="table-empty">Loading...</td></tr>
+            } @else if (cancelRequestedOrders.length === 0) {
+              <tr><td colspan="6" class="table-empty">No cancellation requests at this time.</td></tr>
+            } @else {
+              @for (o of cancelRequestedOrders; track o.orderId) {
+                <tr>
+                  <td class="td-primary">#ORD-{{ o.orderId }}</td>
+                  <td>{{ o.orderTitle }}</td>
+                  <td>{{ o.createdByName }}</td>
+                  <td class="td-truncate">{{ getItems(o) }}</td>
+                  <td class="td-primary">{{ getAmount(o.totalAmount) }}</td>
+                  <td>
+                    <div class="approval-actions">
+                      <button (click)="approveCancellation(o.orderId)" [disabled]="busyId === o.orderId"
+                        class="btn-sm-approve" title="Approve Cancellation">✓ Cancel</button>
+                      <button (click)="rejectCancellation(o.orderId)" [disabled]="busyId === o.orderId"
+                        class="btn-sm-reject" title="Reject Cancellation">✕ Keep</button>
+                      <a [routerLink]="['/app/orders', o.orderId]" class="btn-sm-view" title="View">⋯</a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (cancelRequestedOrders.length > 0) {
+        <div style="padding:0.75rem 1rem;background:#fef3c7;border-top:1px solid #fde68a;font-size:0.85rem;color:#92400e;">
+          <strong>Note:</strong> Approving a cancellation will mark the order as CANCELLED and restore any deducted stock quantities.
+          Rejecting will return the order to its previous status.
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Stock Alerts Tab -->
+  @if (activeTab === 'stock') {
+    <div class="table-card">
+      <div class="table-card-header">
+        <h2 class="table-card-title">Low &amp; Critical Stock</h2>
+      </div>
+      <div class="table-scroll">
+        <table class="mgr-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Stock Level</th>
+              <th>Severity</th>
+              <th class="th-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (lowStockProducts.length === 0) {
+              <tr><td colspan="5" class="table-empty">All products are at healthy stock levels.</td></tr>
+            } @else {
+              @for (p of lowStockProducts; track p.productId) {
+                <tr>
+                  <td class="td-primary">{{ p.productName }}</td>
+                  <td>{{ p.categoryName }}</td>
+                  <td>
+                    <div class="stock-bar-cell">
+                      <div class="stock-bar-track">
+                        <div class="stock-bar-fill" [ngClass]="stockBarClass(p)" [style.width.%]="stockBarPercent(p)"></div>
+                      </div>
+                      <span class="stock-qty-label">{{ p.stockQuantity ?? 0 }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="stockSeverity(p).cls">{{ stockSeverity(p).label }}</span>
+                  </td>
+                  <td class="td-right">
+                    <button (click)="createReorder(p)" class="btn-reorder">Create Reorder →</button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="stock-overview-card">
+      <h2 class="stock-overview-title">Stock Level Overview</h2>
+      @if (stockOverviewData.length === 0) {
+        <p class="stock-overview-empty">No products to display.</p>
+      } @else {
+        <div class="stock-overview-rows">
+          @for (row of stockOverviewData; track row.label) {
+            <div>
+              <div class="stock-overview-row-header">
+                <span class="stock-overview-row-label">{{ row.label }}</span>
+                <span class="stock-overview-row-count">{{ row.count }} product(s)</span>
+              </div>
+              <div class="stock-overview-track">
+                <div class="stock-overview-fill" [ngClass]="row.barClass" [style.width.%]="row.percent"></div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Supplier Performance Tab -->
+  @if (activeTab === 'suppliers') {
+    <div class="supplier-placeholder">
+      <p>Supplier performance analytics require dedicated backend metrics endpoints, which aren't yet exposed by this server.</p>
+      <p class="placeholder-sub">Once available, this tab will show on-time delivery rates, approval ratios, and quality scores per supplier.</p>
+    </div>
+  }
+</div>

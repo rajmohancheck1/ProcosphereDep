@@ -1,0 +1,443 @@
+/* ============================================================
+   Manager Dashboard — component styles
+   ============================================================ */
+
+/* Page layout */
+.manager-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Stock alert banner */
+.stock-alert-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stock-alert-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.stock-alert-text {
+  font-size: 0.875rem;
+  color: #7f1d1d;
+}
+
+/* Page header row */
+.manager-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.manager-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.manager-subtitle {
+  color: #4b5563;
+}
+
+.manager-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.export-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+/* Bulk approve button — enabled / disabled states */
+.btn-bulk {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.15s;
+}
+
+.btn-bulk-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btn-bulk-active:hover:not(:disabled) {
+  background: #bbf7d0;
+}
+
+.btn-bulk-disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Metric cards grid */
+.manager-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .manager-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .manager-metrics-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Metric card */
+.manager-metric-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.25rem;
+}
+
+.metric-card-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.metric-card-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.metric-card-sub-red {
+  font-size: 0.75rem;
+  color: #dc2626;
+}
+
+.metric-card-sub-green {
+  font-size: 0.75rem;
+  color: #16a34a;
+}
+
+.metric-card-sub-gray {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Tabs nav */
+.tabs-nav {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabs-nav-inner {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.tab-btn {
+  padding-bottom: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  color: #4b5563;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-btn.tab-active {
+  border-bottom-color: #9333ea;
+  color: #7e22ce;
+}
+
+.tab-btn:not(.tab-active):hover {
+  color: #374151;
+}
+
+/* Table container (shared) */
+.table-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.table-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.table-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+/* Generic data table used in this component */
+.mgr-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mgr-table thead {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mgr-table th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mgr-table th.th-center {
+  text-align: center;
+}
+
+.mgr-table th.th-right {
+  text-align: right;
+}
+
+.mgr-table tbody {
+  background: #ffffff;
+}
+
+.mgr-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mgr-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.mgr-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.mgr-table td {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.td-primary {
+  font-weight: 500;
+  color: #111827;
+}
+
+.td-truncate {
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-right {
+  text-align: right;
+}
+
+/* Checkbox column */
+.th-checkbox {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.td-checkbox {
+  padding: 1rem;
+  text-align: center;
+}
+
+.row-checkbox {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border-color: #d1d5db;
+}
+
+/* Inline approve/reject/view action buttons */
+.approval-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Bulk action buttons inside table header */
+.btn-bulk-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s;
+}
+
+.btn-bulk-sm-approve-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btn-bulk-sm-approve-active:hover:not(:disabled) {
+  background: #bbf7d0;
+}
+
+.btn-bulk-sm-reject-active {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-bulk-sm-reject-active:hover:not(:disabled) {
+  background: #fecaca;
+}
+
+.btn-bulk-sm-inactive {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+.btn-bulk-sm:disabled {
+  cursor: not-allowed;
+}
+
+/* Stock bar (per-row) */
+.stock-bar-track {
+  width: 8rem;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+  overflow: hidden;
+}
+
+.stock-bar-fill {
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: width 0.3s;
+}
+
+.stock-bar-red    { background: #ef4444; }
+.stock-bar-yellow { background: #eab308; }
+.stock-bar-green  { background: #22c55e; }
+
+.stock-qty-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stock-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Reorder link */
+.btn-reorder {
+  color: #9333ea;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-reorder:hover {
+  color: #6b21a8;
+}
+
+/* Stock Overview chart card */
+.stock-overview-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.stock-overview-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.stock-overview-empty {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.stock-overview-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stock-overview-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.stock-overview-row-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.stock-overview-row-count {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.stock-overview-track {
+  width: 100%;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  height: 0.75rem;
+  overflow: hidden;
+}
+
+.stock-overview-fill {
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+/* Supplier performance placeholder */
+.supplier-placeholder {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.supplier-placeholder p {
+  font-size: 0.875rem;
+}
+
+.supplier-placeholder .placeholder-sub {
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}

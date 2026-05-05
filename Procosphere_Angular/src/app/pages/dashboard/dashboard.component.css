@@ -1,0 +1,305 @@
+/* ============================================================
+   Dashboard (router/role-switcher) — component styles
+   ============================================================ */
+
+/* Page layout */
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Page header */
+.dashboard-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-subtitle {
+  color: #4b5563;
+}
+
+/* Metric cards grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Individual metric card */
+.metric-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.metric-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.metric-icon-wrap {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.metric-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #16a34a;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.metric-trend svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.metric-label {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+/* Icon colors for metric cards */
+.icon-bg-blue   { background: #3b82f6; }
+.icon-bg-green  { background: #22c55e; }
+.icon-bg-yellow { background: #eab308; }
+.icon-bg-red    { background: #ef4444; }
+.icon-bg-purple { background: #a855f7; }
+.icon-bg-rose   { background: #e11d48; }
+
+.metric-icon-wrap svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #ffffff;
+}
+
+/* Quick Actions */
+.section-header-row {
+  margin-bottom: 1rem;
+}
+
+.quick-actions-section > .section-header-row > h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .quick-actions-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.action-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+  text-align: left;
+  transition: box-shadow 0.2s;
+  display: block;
+  width: 100%;
+}
+
+.action-card:hover {
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.action-icon-wrap {
+  display: inline-block;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.action-icon-wrap svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #ffffff;
+}
+
+.action-label {
+  font-weight: 500;
+}
+
+/* Recent Orders section title */
+.recent-orders-section > h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Orders table container */
+.orders-table-container {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.orders-table-scroll {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orders-table th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.orders-table tbody {
+  background: #ffffff;
+}
+
+.orders-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orders-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.orders-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.orders-table td {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.td-order-id {
+  white-space: nowrap;
+  font-weight: 500;
+  color: #111827;
+}
+
+.td-supplier {
+  white-space: nowrap;
+}
+
+.td-products {
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-amount {
+  white-space: nowrap;
+  font-weight: 500;
+  color: #111827;
+}
+
+.td-date {
+  white-space: nowrap;
+}
+
+.td-status {
+  white-space: nowrap;
+}
+
+.td-progress {
+  white-space: nowrap;
+}
+
+.td-actions {
+  white-space: nowrap;
+}
+
+/* Inline status badge for orders table */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+}
+
+/* Progress bar inside table */
+.progress-row-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-track-inline {
+  flex: 1;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+
+.progress-fill-blue {
+  background: #2563eb;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.progress-pct-label {
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+/* View action button in table */
+.btn-view-order {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #2563eb;
+  font-size: 0.875rem;
+}
+
+.btn-view-order:hover {
+  color: #1e40af;
+}
+
+.btn-view-order svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.btn-actions-group {
+  display: flex;
+  gap: 0.5rem;
+}

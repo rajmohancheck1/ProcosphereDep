@@ -1,0 +1,255 @@
+.profile-page {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Page header */
+.profile-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.profile-page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.profile-page-subtitle {
+  color: #4b5563;
+}
+
+.btn-edit-profile {
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-edit-profile:hover {
+  background: #1d4ed8;
+}
+
+/* Profile Card */
+.profile-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.profile-banner {
+  background: linear-gradient(to right, #2563eb, #7c3aed);
+  height: 8rem;
+}
+
+.profile-card-body {
+  padding: 0 1.5rem 1.5rem;
+}
+
+/* Avatar */
+.profile-avatar-wrapper {
+  position: relative;
+  margin-top: -4rem;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar {
+  width: 8rem;
+  height: 8rem;
+  background: #ffffff;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #2563eb;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+  border: 4px solid #ffffff;
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Form sections */
+.profile-form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .profile-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.profile-field-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.profile-field-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.profile-field-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.profile-field-input:disabled {
+  background: #f9fafb;
+  color: #374151;
+}
+
+.profile-field-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* Action buttons */
+.profile-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-profile-save {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-profile-save:hover {
+  background: #1d4ed8;
+}
+
+.btn-profile-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-profile-cancel {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-profile-cancel:hover {
+  background: #f9fafb;
+}
+
+.btn-profile-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Activity Summary */
+.activity-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.activity-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .activity-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.activity-stat {
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.activity-stat.blue {
+  background: #eff6ff;
+}
+
+.activity-stat.green {
+  background: #f0fdf4;
+}
+
+.activity-stat.purple {
+  background: #faf5ff;
+}
+
+.activity-stat-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.activity-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.activity-stat.blue .activity-stat-value {
+  color: #2563eb;
+}
+
+.activity-stat.green .activity-stat-value {
+  color: #16a34a;
+}
+
+.activity-stat.purple .activity-stat-value {
+  color: #9333ea;
+}

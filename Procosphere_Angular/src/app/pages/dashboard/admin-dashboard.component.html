@@ -1,0 +1,219 @@
+<div class="admin-page">
+  @if (errorMsg) {
+    <div class="alert-error alert"><strong>Error:</strong> {{ errorMsg }}</div>
+  }
+  @if (successMsg) {
+    <div class="alert-success alert">{{ successMsg }}</div>
+  }
+
+  <!-- Page header -->
+  <div class="admin-header">
+    <div>
+      <h1 class="admin-heading">Admin Control Panel</h1>
+      <p class="admin-subtitle">System healthy · Managing {{ totalUsers }} user(s) · {{ today }}</p>
+    </div>
+    <div class="admin-header-actions">
+      <button (click)="navigateTo('/app/users')" class="btn-manage-users">+ Manage Users</button>
+    </div>
+  </div>
+
+  <!-- Metric Cards -->
+  <div class="admin-metrics-grid">
+    <div class="admin-metric-card">
+      <p class="metric-card-label">Total Users</p>
+      <p class="metric-card-value">{{ totalUsers }}</p>
+      <p class="metric-card-sub">{{ distinctRoleCount }} role(s) assigned</p>
+    </div>
+    <div class="admin-metric-card">
+      <p class="metric-card-label">Supplier Users</p>
+      <p class="metric-card-value">{{ supplierUserCount }}</p>
+      <p class="metric-card-sub-amber">With SUPPLIER role</p>
+    </div>
+    <div class="admin-metric-card">
+      <p class="metric-card-label">Products Listed</p>
+      <p class="metric-card-value">{{ totalProducts }}</p>
+      <p class="metric-card-sub">{{ totalCategories }} categories</p>
+    </div>
+    <div class="admin-metric-card">
+      <p class="metric-card-label">Password Resets</p>
+      <p class="metric-card-value" [style.color]="pendingResetCount > 0 ? '#dc2626' : 'inherit'">
+        {{ pendingResetCount }}
+      </p>
+      <p class="metric-card-sub-red">Pending approval</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-nav" style="margin-bottom:1.5rem;">
+    <nav class="tabs-nav-inner">
+      <button (click)="activeTab='users'" class="tab-btn" [class.tab-active]="activeTab==='users'">
+        User Management
+      </button>
+      <button (click)="activeTab='resetRequests'" class="tab-btn" [class.tab-active]="activeTab==='resetRequests'">
+        Password Reset Requests
+        @if (pendingResetCount > 0) {
+          <span style="margin-left:6px;background:#dc2626;color:#fff;border-radius:9999px;padding:1px 7px;font-size:0.75rem;">
+            {{ pendingResetCount }}
+          </span>
+        }
+      </button>
+    </nav>
+  </div>
+
+  <!-- User Management Tab -->
+  @if (activeTab === 'users') {
+    <!-- Filters -->
+    <div class="filters-card">
+      <div class="filters-grid">
+        <select [(ngModel)]="filterRole" class="filter-select">
+          <option value="All">All Roles</option>
+          @for (role of roles; track role) { <option [value]="role">{{ roleLabel[role] }}</option> }
+        </select>
+        <select [(ngModel)]="filterStatus" class="filter-select">
+          <option value="All">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Search name/email..."
+          class="filter-input" />
+        <div class="filter-btn-group">
+          <button class="btn-filter">Filter</button>
+          <button (click)="resetFilters()" class="btn-filter">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table-container">
+      <div class="users-table-header">
+        <h2 class="users-table-title">Users ({{ totalUsers }} total)</h2>
+        <button (click)="load()" class="btn-refresh">&#8635; Refresh</button>
+      </div>
+      <div class="users-table-scroll">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Change Role</th>
+              <th class="th-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading) {
+              <tr><td colspan="6" class="table-empty">Loading users...</td></tr>
+            } @else if (filteredUsers.length === 0) {
+              <tr><td colspan="6" class="table-empty">No users match the current filters.</td></tr>
+            } @else {
+              @for (u of filteredUsers; track u.userId) {
+                <tr>
+                  <td>
+                    <div class="user-name-cell">
+                      <div class="user-avatar">{{ initials(u) }}</div>
+                      <div>
+                        <p class="user-name-text">{{ u.firstName }} {{ u.lastName }}
+                          @if (isSelf(u)) { <span class="user-self-tag">(you)</span> }
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ u.email }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="roleBadgeClass[u.role]">{{ roleLabel[u.role] }}</span>
+                  </td>
+                  <td>{{ u.department || '—' }}</td>
+                  <td>
+                    <select [value]="u.role" (change)="changeRole(u, $any($event.target).value)"
+                      [disabled]="savingId === u.userId"
+                      class="role-change-select">
+                      @for (role of roles; track role) { <option [value]="role">{{ roleLabel[role] }}</option> }
+                    </select>
+                  </td>
+                  <td class="td-right">
+                    <button (click)="deleteUser(u)" [disabled]="savingId === u.userId || isSelf(u)"
+                      class="btn-delete-user">Delete</button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- Password Reset Requests Tab -->
+  @if (activeTab === 'resetRequests') {
+    <div class="users-table-container">
+      <div class="users-table-header">
+        <h2 class="users-table-title">Password Reset Requests ({{ resetRequests.length }} total)</h2>
+        <button (click)="load()" class="btn-refresh">&#8635; Refresh</button>
+      </div>
+
+      @if (resetRequests.length === 0 && !isLoading) {
+        <div style="padding:2rem;text-align:center;color:#6b7280;">
+          No password reset requests have been submitted yet.
+        </div>
+      } @else {
+        <div class="users-table-scroll">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>User ID</th>
+                <th>Submitted At</th>
+                <th>Status</th>
+                <th class="th-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (isLoading) {
+                <tr><td colspan="7" class="table-empty">Loading requests...</td></tr>
+              } @else {
+                @for (req of resetRequests; track req.id) {
+                  <tr>
+                    <td>#{{ req.id }}</td>
+                    <td>{{ req.userName }}</td>
+                    <td>{{ req.userEmail }}</td>
+                    <td>{{ req.userId }}</td>
+                    <td>{{ formatDate(req.createdAt) }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="resetStatusBadge(req.status)">{{ req.status }}</span>
+                    </td>
+                    <td class="td-right">
+                      @if (req.status === 'PENDING') {
+                        <button (click)="approveReset(req)"
+                          [disabled]="processingResetId === req.id"
+                          class="btn-reset-approve">
+                          ✓ Approve
+                        </button>
+                        <button (click)="rejectReset(req)"
+                          [disabled]="processingResetId === req.id"
+                          class="btn-reset-reject">
+                          ✕ Reject
+                        </button>
+                      } @else {
+                        <span class="reset-done-label">{{ req.status }}</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (pendingResetCount > 0) {
+          <div class="reset-info-banner">
+            <strong>{{ pendingResetCount }} pending request(s):</strong>
+            Once you approve, the user can log in using "Login with Email only" on the login page and will be prompted to set a new password.
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

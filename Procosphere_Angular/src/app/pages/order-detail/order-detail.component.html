@@ -1,0 +1,251 @@
+<div class="order-detail-page">
+  <button (click)="goBack()" class="back-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" class="back-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/></svg>
+    Back
+  </button>
+
+  @if (errorMsg) {
+    <div class="alert-error"><strong>Error:</strong> {{ errorMsg }}</div>
+  }
+  @if (successMsg) {
+    <div class="alert-success">{{ successMsg }}</div>
+  }
+
+  @if (isLoading) {
+    <div class="placeholder-card">Loading order...</div>
+  } @else if (!order) {
+    <div class="placeholder-card">Order not found.</div>
+  } @else {
+    <!-- Header -->
+    <div class="order-header-card">
+      <div class="order-header-top">
+        <div class="order-header-left">
+          <p class="order-label">ORDER</p>
+          <h1 class="order-title">#ORD-{{ order.orderId }} &middot; {{ order.orderTitle }}</h1>
+          <p class="order-meta">Created by {{ order.createdByName }} on {{ formatDateOnly(order.createdAt) }}</p>
+        </div>
+        <div class="order-header-right">
+          <span class="badge" [ngClass]="statusColors[order.status] || 'status-draft'">{{ order.status }}</span>
+          <p class="order-total">${{ totalAmount.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-row">
+        <!-- Manager/Admin: approve or reject PENDING orders -->
+        @if (canApprove) {
+          <button (click)="approve()" [disabled]="busy" class="btn-approve">&#10003; Approve</button>
+        }
+        @if (canReject) {
+          <button (click)="reject()" [disabled]="busy" class="btn-reject">&#10005; Reject</button>
+        }
+
+        <!-- Supplier/Admin: advance supply chain status -->
+        @if (canMarkOrdered) {
+          <button (click)="markOrdered()" [disabled]="busy" class="btn-mark-ordered">Mark as Ordered</button>
+        }
+        @if (canMarkReceived) {
+          <button (click)="markReceived()" [disabled]="busy" class="btn-mark-received">Mark as Received</button>
+        }
+        @if (canMarkReturned) {
+          <button (click)="markReturned()" [disabled]="busy" class="btn-mark-returned">Mark as Returned</button>
+        }
+
+        <!-- User: request cancellation before order is received -->
+        @if (canRequestCancel) {
+          <button (click)="requestCancel()" [disabled]="busy" class="btn-cancel-order">Request Cancellation</button>
+        }
+
+        <!-- Manager/Admin: act on a user's cancellation request -->
+        @if (canApproveCancellation) {
+          <button (click)="approveCancellation()" [disabled]="busy" class="btn-approve">&#10003; Approve Cancellation</button>
+        }
+        @if (canRejectCancellation) {
+          <button (click)="rejectCancellation()" [disabled]="busy" class="btn-reject">&#10005; Reject Cancellation</button>
+        }
+
+        @if (canDelete) {
+          <button (click)="deleteOrder()" [disabled]="busy" class="btn-delete-order">Delete</button>
+        }
+      </div>
+
+      <!-- Cancellation notice banner -->
+      @if (order.status === 'CANCEL_REQUESTED') {
+        <div style="margin-top:0.75rem;padding:0.6rem 1rem;background:#fef3c7;border-radius:6px;border:1px solid #fde68a;font-size:0.875rem;color:#92400e;">
+          <strong>Cancellation Requested:</strong> This order's cancellation is awaiting manager approval.
+          @if (isManagerOrAdmin) { Manager can approve or reject using the buttons above. }
+          @else { Please wait for a manager to review your request. }
+        </div>
+      }
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-card">
+      <h2 class="timeline-heading">Order Timeline</h2>
+      <div class="timeline-row">
+        @for (step of timeline; track step.label; let i = $index) {
+          <div class="timeline-step">
+            <div class="timeline-step-inner">
+              <div class="timeline-circle"
+                [class.tl-active]="step.current"
+                [class.tl-done]="step.reached && !step.current && step.status !== 'REJECTED' && step.status !== 'CANCELLED' && step.status !== 'RETURNED' && step.status !== 'CANCEL_REQUESTED'"
+                [class.tl-rejected]="step.status === 'REJECTED'"
+                [class.tl-cancelled]="step.status === 'CANCELLED'"
+                [class.tl-returned]="step.status === 'RETURNED'"
+                [class.tl-pending]="!step.reached">
+                {{ i + 1 }}
+              </div>
+              @if (i < timeline.length - 1) {
+                <div class="timeline-connector"
+                  [class.tl-conn-done]="step.reached && timeline[i + 1].reached"
+                  [class.tl-conn-pending]="!(step.reached && timeline[i + 1].reached)"></div>
+              }
+            </div>
+            <p class="timeline-label"
+              [class.tl-label-current]="step.current"
+              [class.tl-label-reached]="step.reached"
+              [class.tl-label-unreached]="!step.reached">
+              {{ step.label }}
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Order info grid -->
+    <div class="info-grid">
+      <div class="info-card">
+        <h2 class="info-heading">Order Details</h2>
+        <dl class="details-list">
+          <div class="details-row"><dt class="details-term">Department</dt><dd class="details-def">{{ order.department || '—' }}</dd></div>
+          <div class="details-row"><dt class="details-term">Priority</dt><dd class="details-def">{{ order.priority || '—' }}</dd></div>
+          <div class="details-row"><dt class="details-term">Payment Method</dt><dd class="details-def">{{ order.paymentMethod || '—' }}</dd></div>
+          <div class="details-row"><dt class="details-term">Budget Code</dt><dd class="details-def">{{ order.budgetCode || '—' }}</dd></div>
+          <div class="details-row"><dt class="details-term">Expected Delivery</dt><dd class="details-def">{{ formatDateOnly(order.expectedDelivery) }}</dd></div>
+          <div class="details-row"><dt class="details-term">Supplier</dt><dd class="details-def">{{ order.supplierName || ('Supplier #' + (order.supplierId ?? '—')) }}</dd></div>
+          <div class="details-row"><dt class="details-term">Order Type</dt><dd class="details-def">{{ order.orderType || 'REQUISITION' }}</dd></div>
+        </dl>
+      </div>
+
+      <div class="info-card">
+        <h2 class="info-heading">Items ({{ itemCount }})</h2>
+        @if (itemCount === 0) {
+          <p class="items-empty">No items.</p>
+        } @else {
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th class="th-right">Qty</th>
+                <th class="th-right">Price</th>
+                <th class="th-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of order.items; track item.orderItemId) {
+                <tr>
+                  <td>{{ item.productName }}</td>
+                  <td class="td-right">{{ item.quantity }}</td>
+                  <td class="td-right">${{ (item.price ?? 0).toFixed(2) }}</td>
+                  <td class="td-right" style="font-weight: 500;">${{ ((item.price ?? 0) * item.quantity).toFixed(2) }}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="td-foot-label">Total</td>
+                <td class="td-foot-total">${{ totalAmount.toFixed(2) }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        }
+      </div>
+    </div>
+
+    <!-- Deliveries -->
+    <div class="deliveries-card">
+      <div class="deliveries-header">
+        <h2 class="info-heading" style="margin-bottom: 0;">Delivery Tracking</h2>
+        @if (canManageDeliveries) {
+          <button (click)="openCreateDelivery()" class="btn-add-tracking">+ Add tracking</button>
+        }
+      </div>
+
+      @if (!canManageDeliveries && role === 'MANAGER') {
+        <p style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;">
+          Delivery records are managed by Supplier or Admin only.
+        </p>
+      }
+
+      @if (deliveries.length === 0) {
+        <p class="deliveries-empty">No delivery records yet.</p>
+      } @else {
+        <table class="deliveries-table">
+          <thead>
+            <tr>
+              <th>Tracking #</th>
+              <th>Status</th>
+              <th>Shipped</th>
+              <th>Delivered</th>
+              @if (canManageDeliveries) { <th class="th-right">Actions</th> }
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of deliveries; track d.deliveryId) {
+              <tr>
+                <td class="td-tracking">{{ d.trackingNumber || 'TRK-' + d.deliveryId }}</td>
+                <td><span class="badge" [ngClass]="deliveryStatusColors[d.status || ''] || 'delivery-pending'">{{ d.status || 'PENDING' }}</span></td>
+                <td class="td-shipped">{{ formatDate(d.shippedDate) }}</td>
+                <td class="td-delivered">{{ formatDate(d.deliveredDate) }}</td>
+                @if (canManageDeliveries) {
+                  <td class="td-del-actions">
+                    <button (click)="openEditDelivery(d)" class="btn-edit-delivery">Edit</button>
+                    <button (click)="deleteDelivery(d)" class="btn-delete-delivery">Delete</button>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+  <!-- Delivery Modal -->
+  @if (showDeliveryModal) {
+    <div class="modal-overlay" (click)="closeDeliveryModal()">
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3 class="modal-title">{{ editingDelivery ? 'Edit' : 'Add' }} Delivery Tracking</h3>
+          <button (click)="closeDeliveryModal()" class="modal-close-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="modal-close-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-fields">
+            <div class="form-group">
+              <label class="form-label">Tracking Number</label>
+              <input type="text" [(ngModel)]="deliveryForm.trackingNumber" placeholder="Optional" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select [(ngModel)]="deliveryForm.status" class="form-input">
+                @for (s of deliveryStatuses; track s) { <option [value]="s">{{ s }}</option> }
+              </select>
+              <p class="modal-hint">
+                SHIPPED/IN_TRANSIT/OUT_FOR_DELIVERY auto-stamps shipped date.
+                DELIVERED auto-stamps delivered date and advances the order to RECEIVED if it was ORDERED.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="saveDelivery()" [disabled]="busy" class="btn-modal-save">
+            {{ busy ? 'Saving...' : 'Save' }}
+          </button>
+          <button (click)="closeDeliveryModal()" class="btn-modal-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

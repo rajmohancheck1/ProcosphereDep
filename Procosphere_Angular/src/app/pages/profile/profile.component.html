@@ -1,0 +1,140 @@
+<div class="profile-page">
+  <div class="profile-page-header">
+    <div>
+      <h1 class="profile-page-title">My Profile</h1>
+      <p class="profile-page-subtitle">Your account information</p>
+    </div>
+    @if (!isEditing) {
+      <button (click)="startEdit()" class="btn-edit-profile">Edit Profile</button>
+    }
+  </div>
+
+  @if (errorMsg) {
+    <div class="alert-error"><strong>Error:</strong> {{ errorMsg }}</div>
+  }
+  @if (savedMessage) {
+    <div class="alert-success">{{ savedMessage }}</div>
+  }
+
+  <!-- Profile Card -->
+  <div class="profile-card">
+    <div class="profile-banner"></div>
+    <div class="profile-card-body">
+      <!-- Avatar -->
+      <div class="profile-avatar-wrapper">
+        <div class="profile-avatar">
+          @if (formData.avatarUrl) {
+            <img [src]="formData.avatarUrl" alt="avatar" (error)="$any($event.target).style.display='none'" />
+          } @else {
+            {{ initials }}
+          }
+        </div>
+      </div>
+
+      <div class="profile-form-sections">
+        <!-- Name -->
+        <div class="profile-form-grid">
+          <div>
+            <label class="profile-field-label">First Name</label>
+            <input type="text" [(ngModel)]="formData.firstName" [disabled]="!isEditing"
+              class="profile-field-input" />
+          </div>
+          <div>
+            <label class="profile-field-label">Last Name</label>
+            <input type="text" [(ngModel)]="formData.lastName" [disabled]="!isEditing"
+              class="profile-field-input" />
+          </div>
+        </div>
+
+        <!-- Email + Phone -->
+        <div class="profile-form-grid">
+          <div>
+            <label class="profile-field-label">Email</label>
+            <input type="email" [(ngModel)]="formData.email" [disabled]="!isEditing"
+              class="profile-field-input" />
+          </div>
+          <div>
+            <label class="profile-field-label">Phone</label>
+            <input type="tel" [(ngModel)]="formData.phone" [disabled]="!isEditing"
+              placeholder="+91 98765 43210" inputmode="tel"
+              class="profile-field-input" />
+          </div>
+        </div>
+
+        <!-- Department + Company -->
+        <div class="profile-form-grid">
+          <div>
+            <label class="profile-field-label">Department</label>
+            <input type="text" [(ngModel)]="formData.department" [disabled]="!isEditing"
+              class="profile-field-input" />
+          </div>
+          <div>
+            <label class="profile-field-label">Company</label>
+            <input type="text" [(ngModel)]="formData.company" [disabled]="!isEditing"
+              class="profile-field-input" />
+          </div>
+        </div>
+
+        <!-- Address (full width) -->
+        <div>
+          <label class="profile-field-label">Address</label>
+          <input type="text" [(ngModel)]="formData.address" [disabled]="!isEditing"
+            placeholder="Street, City, State, PIN"
+            class="profile-field-input" />
+        </div>
+
+        <!-- Avatar URL -->
+        <div>
+          <label class="profile-field-label">Avatar URL</label>
+          <input type="url" [(ngModel)]="formData.avatarUrl" [disabled]="!isEditing"
+            placeholder="https://..."
+            class="profile-field-input" />
+        </div>
+
+        <!-- Read-only fields -->
+        <div class="profile-form-grid">
+          <div>
+            <label class="profile-field-label">Role</label>
+            <input type="text" [value]="displayRole" disabled class="profile-field-input" />
+            <p class="profile-field-hint">Role can only be changed by an administrator.</p>
+          </div>
+          <div>
+            <label class="profile-field-label">User ID</label>
+            <input type="text" [value]="userId ?? ''" disabled class="profile-field-input" />
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        @if (isEditing) {
+          <div class="profile-actions">
+            <button (click)="save()" [disabled]="isSaving" class="btn-profile-save">
+              {{ isSaving ? 'Saving...' : 'Save Changes' }}
+            </button>
+            <button (click)="cancelEdit()" [disabled]="isSaving" class="btn-profile-cancel">
+              Cancel
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Summary -->
+  <div class="activity-card">
+    <h2 class="activity-title">Activity Summary</h2>
+    <div class="activity-grid">
+      <div class="activity-stat blue">
+        <p class="activity-stat-label">Total Orders</p>
+        <p class="activity-stat-value">{{ totalOrders }}</p>
+      </div>
+      <div class="activity-stat green">
+        <p class="activity-stat-label">Approved / Completed</p>
+        <p class="activity-stat-value">{{ approvedOrders }}</p>
+      </div>
+      <div class="activity-stat purple">
+        <p class="activity-stat-label">Total Spent</p>
+        <p class="activity-stat-value">${{ totalSpent.toFixed(2) }}</p>
+      </div>
+    </div>
+  </div>
+</div>
