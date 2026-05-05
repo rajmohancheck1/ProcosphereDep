@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8090'
+  apiUrl: 'https://procospheredep-p9kf.onrender.com'
 };
